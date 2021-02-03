@@ -1,20 +1,4 @@
----
-title: Install Docker Engine
-description: Lists the installation methods
-keywords: docker, installation, install, Docker Engine, Docker Engine, docker editions, stable, edge
-redirect_from:
-- /engine/installation/linux/
-- /engine/installation/linux/frugalware/
-- /engine/installation/frugalware/
-- /engine/installation/linux/other/
-- /engine/installation/linux/archlinux/
-- /engine/installation/linux/cruxlinux/
-- /engine/installation/linux/gentoolinux/
-- /engine/installation/linux/docker-ce/
-- /engine/installation/linux/docker-ee/
-- /engine/installation/
-- /en/latest/installation/
----
+# Install Docker Engine
 
 
 ## Supported platforms
