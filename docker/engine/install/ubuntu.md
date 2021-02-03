@@ -1,17 +1,4 @@
----
-description: Instructions for installing Docker Engine on Ubuntu
-keywords: requirements, apt, installation, ubuntu, install, uninstall, upgrade, update
-redirect_from:
-- /engine/installation/ubuntulinux/
-- /installation/ubuntulinux/
-- /engine/installation/linux/ubuntu/
-- /engine/installation/linux/ubuntulinux/
-- /engine/installation/linux/docker-ce/ubuntu/
-- /install/linux/ubuntu/
-- /install/linux/docker-ce/ubuntu/
-title: Install Docker Engine on Ubuntu
-toc_max: 4
----
+# Install Docker Engine on Ubuntu
 
 To get started with Docker Engine on Ubuntu, make sure you
 [meet the prerequisites](#prerequisites), then
