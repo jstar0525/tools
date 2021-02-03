@@ -1,14 +1,4 @@
----
-description: Engine
-keywords: Engine
-redirect_from:
-- /edge/
-- /engine/ce-ee-node-activate/
-- /engine/misc/
-- /linux/
-- /manuals/ # TODO remove this redirect after we've created a landing page for the product manuals section
-title: Docker Engine overview
----
+# Docker Engine overview
 
 Docker Engine is an open source containerization technology for building and
 containerizing your applications. Docker Engine acts as a client-server
