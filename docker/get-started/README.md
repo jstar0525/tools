@@ -1,14 +1,4 @@
----
-description: Docker explained in depth
-keywords: docker, introduction, documentation, about, technology, understanding
-redirect_from:
-- /introduction/understanding-docker/
-- /engine/userguide/basics/
-- /engine/introduction/understanding-docker/
-- /engine/understanding-docker/
-- /engine/docker-overview/
-title: Docker overview
----
+# Docker overview
 
 Docker is an open platform for developing, shipping, and running applications.
 Docker enables you to separate your applications from your infrastructure so
