@@ -1,0 +1,195 @@
+*****************************************************************************
+* Copyright (c) 2018-2020 NVIDIA Corporation.  All rights reserved.
+*
+* NVIDIA Corporation and its licensors retain all intellectual property
+* and proprietary rights in and to this software, related documentation
+* and any modifications thereto.  Any use, reproduction, disclosure or
+* distribution of this software and related documentation without an express
+* license agreement from NVIDIA Corporation is strictly prohibited.
+*****************************************************************************
+
+***********************************************************************
+                              README
+                       DEEPSTREAM ON TEGRA SDK
+                         QUICK START GUIDE
+***********************************************************************
+The NVIDIA® DeepStream on Jetson Software Development Kit (SDK) provides a
+framework for constructing GPU-accelerated video analytics
+applications running within the L4T package on the
+Jetson platform.
+
+=======================================================================
+Package contents
+=======================================================================
+The DeepStream packages include:
+1. sources - Sources for sample application and plugin
+2. samples - Config files, models, streams and tools to run the sample app
+
+=======================================================================
+Prerequisites
+=======================================================================
+JetPack-4.4 is required to successfully run and use the
+DeepStream on Jetson SDK. JetPack, including the latest L4T
+release, is available for download at:
+https://developer.nvidia.com/embedded/jetpack
+
+After downloading the installer, follow the steps mentioned in SDK Manager
+document to flash the L4T image to your target system.
+The SDK Manager document is available for download at:
+https://docs.nvidia.com/sdk-manager/index.html
+
+=======================================================================
+Additional components required on the target
+=======================================================================
+To successfully use the DeepStream SDK, the following additional
+components must be installed and set up on the target system:
+- CUDA (10.2)
+- TensorRT (7.1+)
+- OpenCV (3.3.1)
+- VisionWorks (1.6)
+Install these packages using JetPack SDK Manager.
+
+=======================================================================
+Installing prerequisite software on Jetson development board:
+=======================================================================
+Packages to be installed:
+$ sudo apt-get install \
+    libssl1.0.0 \
+    libgstreamer1.0-0 \
+    gstreamer1.0-tools \
+    gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad \
+    gstreamer1.0-plugins-ugly \
+    gstreamer1.0-libav \
+    gstreamer1.0-alsa \
+    libgstrtspserver-1.0-0 \
+    libjansson4
+
+=======================================================================
+Installing librdkafka to use kafka protocol adaptor with message broker
+=======================================================================
+Refer to the README files available under
+/opt/nvidia/deepstream/deepstream/sources/libs/kafka_protocol_adaptor
+for detailed documentation on prerequisites and usages of kafka protocol
+adaptor with the message broker plugin for sending messages to cloud.
+
+=======================================================================
+Using AMQP protocol adaptor with message broker
+=======================================================================
+Refer to the README files available under
+/opt/nvidia/deepstream/deepstream/sources/libs/amqp_protocol_adaptor
+for detailed documentation on prerequisites and usages of rabbitmq based
+amqp protocol adaptor with the message broker plugin for sending messages to cloud.
+
+=======================================================================
+Using Azure MQTT protocol adaptor with message broker
+=======================================================================
+Refer to the README files available under sources/libs/azure_protocol_adaptor
+for detailed documentation on prerequisites and usages of azure MQTT protocol
+adaptor with the message broker plugin for sending messages to cloud.
+
+Refer to the source code and README of deepstream-test4 available under
+sources/apps/sample_apps/deepstream-test4/ to send messages to the cloud.
+
+=======================================================================
+[Optional] Uninstall DeepStream 4.0
+=======================================================================
+To uninstall any previously installed DeepStream 4.0 libraries, use uninstall.sh script.
+
+1. Open the uninstall.sh file which will be present in /opt/nvidia/deepstream/deepstream/
+2. Set PREV_DS_VER as 4.0
+3. Run the script as sudo ./uninstall.sh
+
+=======================================================================
+Installing latest nvv4l2 gstreamer plugin
+=======================================================================
+To install latest gstreamer nvv4l2 plugin:
+1. Open the apt source configuration file in a text editor, for example:
+   $ sudo vi /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+2. Change the repository name and download URL in the deb commands as below.
+     deb https://repo.download.nvidia.com/jetson/common r32.4 main
+     deb https://repo.download.nvidia.com/jetson/<platform> r32.4 main
+   Where <platform> identifies the platform’s processor:
+   - t186 for Jetson TX2 series
+   - t194 for Jetson AGX Xavier series or Jetson Xavier NX
+   - t210 for Jetson Nano or Jetson TX1
+   If your platform is Jetson Xavier NX, for example:
+     deb https://repo.download.nvidia.com/jetson/common r32.4 main
+     deb https://repo.download.nvidia.com/jetson/t194 r32.4 main
+3. Save and close the source configuration file.
+4. Enter the commands:
+   $ sudo apt update
+   $ sudo apt install --reinstall nvidia-l4t-gstreamer
+   If apt prompts you to choose a configuration file, reply Y for yes
+   (to use the NVIDIA updated version of the file).
+
+=======================================================================
+Installing DeepStream SDK on Jetson
+=======================================================================
+After using the JetPack SDK Manager, you are ready to install and run
+the DeepStream SDK on Jetson.
+
+To install the DeepStream SDK on Jetson:
+1. On the Jetson target development board, determine the IP address by
+   executing the command:
+   ifconfig
+
+2. Copy the DeepStream on Jetson SDK tarball from the host system to the NVIDIA
+   home directory on the Jetson development board:
+   scp deepstream_sdk_<DS_VERSION>_jetson.tbz2 nvidia@$<ip_address>:~
+
+   Where:
+   - <ip_address> is the IP address as determined earlier.
+
+3. On the Jetson development board, navigate to the DeepStream
+   package and extract it to root as follows:
+   sudo tar xvf deepstream_sdk_<DS_VERSION>_jetson.tbz2 -C /
+
+4. The install.sh script will now be found in:
+   /opt/nvidia/deepstream/deepstream-<DS_REL_VERSION>/
+   Run the install.sh script as follows:
+   sudo ./install.sh
+
+5. Execute the following command on the Jetson development board:
+   sudo ldconfig
+
+=======================================================================
+Running the samples
+=======================================================================
+1. Go to samples directory and run:
+   deepstream-app -c <path to config.txt>
+2. Application config files included in `configs/deepstream-app/`:
+   a. source30_1080p_dec_infer-resnet_tiled_display_int8.txt (30 Decode + Infer)
+   b. source4_1080p_dec_infer-resnet_tracker_sgie_tiled_display_int8.txt
+      (4 Decode + Infer + SGIE + Tracker)
+3. Configuration files for "nvinfer" element in `configs/deepstream-app/`:
+   a. config_infer_primary.txt (Primary Object Detector)
+   b. config_infer_secondary_carcolor.txt (Secondary Car Color Classifier)
+   c. config_infer_secondary_carmake.txt (Secondary Car Make Classifier)
+   d. config_infer_secondary_vehicletypes.txt (Secondary Vehicle Type Classifier)
+
+=======================================================================
+Running the Triton Inference Server samples
+=======================================================================
+Instructions to prepare and run Triton inference server samples
+are provided in samples/configs/deepstream-app-trtis/README.
+
+=========================================================================
+Downloading and Running the Pre-trained Transfer Learning Toolkit Models
+=========================================================================
+Instructions to download and run the pre-trained Transfer Learning Toolkit models
+are provided in samples/configs/tlt_pretrained_models/README.
+
+=======================================================================
+Notes:
+=======================================================================
+1. If the application runs into errors and cannot create gst elements, try again
+after removing gstreamer cache:
+   rm ${HOME}/.cache/gstreamer-1.0/registry.aarch64.bin
+2. When running deepstream for first time, the following warning might show up:
+   "GStreamer-WARNING: Failed to load plugin '...libnvdsgst_inferserver.so':
+    libtrtserver.so: cannot open shared object file: No such file or directory"
+This is a harmless warning indicating that the DeepStream's nvinferserver plugin
+cannot be used since "Triton Inference Server" is not installed.
+If required, try DeepStream's TRT-IS docker image or install the Triton Inference
+Server manually. For more details, refer to https://github.com/NVIDIA/triton-inference-server.
