@@ -22,7 +22,7 @@ labelme ./ --labels label_names.txt
 * dataset dir :   tools/labelme/data/dataset
 ```
 
-![explain img](./doc/json2dataset.png)
+![explain img](./doc/json_dataset.png)
 
 # crop_continue.py
 
@@ -31,12 +31,16 @@ labelme ./ --labels label_names.txt
 ```
 * dataset dir       :  tools/labelme/data/dataset
 * crop_continue dir :  tools/labelme/data/crop_continue
+
+* default setting   : continue crop to y interval 100
+                      orgin image size (4032x3024x3) 
+                      -> croped image size (640x480x3)
 ```
 
 ```
 * mouse left button : draw a rectangle on the clicked center
 * 'e' key : erase the rectangle
-* 's' key : crop the image along the rectangle
+* 's' key : crop the image along the rectangle and save all
 * 'd' key : go to the next image
 * 'a' key : go to the previous image
 * 'esc' key : exit program
