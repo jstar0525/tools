@@ -11,15 +11,9 @@ import cv2
 # Desired image size
 w, h = 640, 480
 
-# continue crop to y interval
-y_interval = 100
-
 # Dataset path
 Dataset_DIR = "./data/dataset"
-SAVE_DIR = './data/crop_continue'
-
-# show resized image
-show_resized = 1/3
+SAVE_DIR = './data/crop_each'
 
 cv2.namedWindow("image")
 
@@ -41,40 +35,36 @@ def lblsave(filename, lbl):
             "Please consider using the .npy format." % filename
         )
 
-def crop_image(SAVE_DIR, viz, img, lbl, identy, xc, yc, j, show_resized, y_interval, w, h, save_img=True, view_img=False):
-    
-    # find x0 coordinate from resized image
-    x0 = int( xc/show_resized-w/2 )
-    x1 = x0 + w
-    y0 = 0
-    
-    while(y0+h <= img.shape[0]):
+def crop_image(SAVE_DIR, viz, img, lbl, identy, j, xc, yc, resize_scale, w, h, save_img=True, view_img=False):
 
-        y1 = y0 + h
-        
-        # crop data from original dataset
-        crop_viz = viz[y0:y1, x0:x1,:]
-        crop_img = img[y0:y1, x0:x1,:]
-        crop_lbl = lbl[y0:y1, x0:x1]
+    # find x0 coordinate from resized image
+    x0 = int( xc/resize_scale-w/2 )
+    y0 = int( yc/resize_scale-h/2 )
+    x1 = x0 + w
+    y1 = y0 + h
     
-        if save_img:
-            Image.fromarray(crop_img).save(SAVE_DIR + '/img_' + identy + '_%02d.png' % (j))
-            lblsave(SAVE_DIR + '/lbl_' + identy + '_%02d.png' % (j), crop_lbl)
-            Image.fromarray(crop_viz).save(SAVE_DIR + '/viz_' + identy + '_%02d.png' % (j))
-            j += 1
-            y0 += y_interval
-        if view_img:
-            cv2.imshow('cropping image %d' %j, cv2.cvtColor(crop_viz, cv2.COLOR_RGB2BGR))
+    # crop data from original dataset
+    crop_viz = viz[y0:y1, x0:x1,:]
+    crop_img = img[y0:y1, x0:x1,:]
+    crop_lbl = lbl[y0:y1, x0:x1]
+
+    if save_img:
+        Image.fromarray(crop_img).save(SAVE_DIR + '/img_' + identy + '_%02d.png' % (j))
+        Image.fromarray(crop_viz).save(SAVE_DIR + '/viz_' + identy + '_%02d.png' % (j))
+        lblsave(SAVE_DIR + '/lbl_' + identy + '_%02d.png' % (j), crop_lbl)
+        j += 1
+    if view_img:
+        cv2.imshow('cropping image', crop_img)
             
     print('data saved')
-    
+
     return j
 
 def click_and_crop(event, x, y, flags, param):
 
     global xc,yc
 
-    rw, rh = w*show_resized, h*show_resized
+    rw, rh = w*resize_scale, h*resize_scale
 
     if event == cv2.EVENT_LBUTTONDOWN:
         # center point of rectangle
@@ -87,15 +77,16 @@ def click_and_crop(event, x, y, flags, param):
 
     elif event == cv2.EVENT_LBUTTONUP:
         # draw the cropping region and direction
+        cv2.rectangle(image, ( int(xc-rw/2), int(yc-rh/2) ), (  int(xc+rw/2), int(yc+rh/2) ), (255, 0, 0), 3)
+        # cv2.rectangle(image, ( int(xc-rw/2), 0 ), (  int(xc+rw/2), image.shape[0] ), (255, 0, 0), 3)
         # cv2.rectangle(image, ( int(xc-rw/2), int(yc-rh/2) ), (  int(xc+rw/2), int(yc+rh/2) ), (0, 0, 255), 3)
-        cv2.rectangle(image, ( int(xc-rw/2), 0 ), (  int(xc+rw/2), image.shape[0] ), (255, 0, 0), 3)
         
 cv2.setMouseCallback("image", click_and_crop)
 
 
-def main(Dataset_DIR, SAVE_DIR, show_resized, y_interval, w, h):
+def main(Dataset_DIR, SAVE_DIR, w, h):
 
-    global image, xc, yc
+    global image, xc, yc, resize_scale
             
     # initialize parameter
     xc, yc = -1, -1
@@ -107,7 +98,7 @@ def main(Dataset_DIR, SAVE_DIR, show_resized, y_interval, w, h):
     i = 0
     # for counting num of saved_image
     j = 1
-
+    
     while(True):
         
         if i >= len(names):
@@ -119,9 +110,13 @@ def main(Dataset_DIR, SAVE_DIR, show_resized, y_interval, w, h):
             viz = np.asarray(Image.open(Dataset_DIR + '/viz_'+ name))
             print(Dataset_DIR + '/viz_'+ name)
     
-        clone = cv2.resize( viz, ( int(viz.shape[1]*show_resized), int(viz.shape[0]*show_resized) ) )
+        # show resized image
+        resize_scale = 1/6.3
+        clone = cv2.resize( viz, ( int(viz.shape[1]*resize_scale), int(viz.shape[0]*resize_scale) ) )
     
         image = clone.copy()
+        # cv2.namedWindow("image")
+        # cv2.setMouseCallback("image", click_and_crop)
     
         while(True):
     
@@ -134,7 +129,7 @@ def main(Dataset_DIR, SAVE_DIR, show_resized, y_interval, w, h):
             # if the 's' key is pressed, save the cropping image
             elif key == ord('s'):
                 identy, _ = name.split('.')
-                j = crop_image(SAVE_DIR, viz, img, lbl, identy, xc, yc, j, show_resized, y_interval, w, h, save_img=True, view_img=False)
+                j = crop_image(SAVE_DIR, viz, img, lbl, identy, j, xc, yc, resize_scale, w, h, save_img=True, view_img=False)
             # if the 'd' key is pressed, goto the next image
             elif key == ord('d'):
                 i += 1
@@ -151,9 +146,9 @@ def main(Dataset_DIR, SAVE_DIR, show_resized, y_interval, w, h):
         if key == 27:
             break
     
-    # close all opened windows
+    # close all open windows
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    main(Dataset_DIR, SAVE_DIR, show_resized, y_interval, w, h)
+    main(Dataset_DIR, SAVE_DIR, w, h)
 

@@ -24,6 +24,28 @@ labelme ./ --labels label_names.txt
 
 ![explain img](./doc/json_dataset.png)
 
+# crop_each.py
+
+## Crop the each dataset
+
+```
+* dataset dir       :  tools/labelme/data/dataset
+* crop_each dir     :  tools/labelme/data/crop_each
+
+* default setting   : orgin image size (4032x3024x3) 
+                      -> croped image size (640x480x3)
+```
+```
+* mouse left button : draw a rectangle on the clicked center
+* 'e' key : erase the rectangle
+* 's' key : crop the image along the rectangle and save last one
+* 'd' key : go to the next image
+* 'a' key : go to the previous image
+* 'esc' key : exit program
+```
+
+![explain img](./doc/crop_each.png)
+
 # crop_continue.py
 
 ## Crop the datatset along the y-axis
