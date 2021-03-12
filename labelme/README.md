@@ -38,7 +38,7 @@ labelme ./ --labels label_names.txt
 ```
 * mouse left button : draw a rectangle on the clicked center
 * 'e' key : erase the rectangle
-* 's' key : crop the image along the rectangle and save last one
+* 's' key : crop the image along the rectangle and save last rectangle
 * 'd' key : go to the next image
 * 'a' key : go to the previous image
 * 'esc' key : exit program
